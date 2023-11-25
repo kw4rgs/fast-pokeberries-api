@@ -39,7 +39,7 @@ class Plotter:
         try:
             growth_times = list(data.get('frequency_growth_time', {}).keys())
             frequency = [int(value.split()[0]) for value in data.get('frequency_growth_time', {}).values()]
-            plt.figure(figsize=(12, 6))
+            plt.figure(figsize=(11, 5))
             plt.bar(growth_times, frequency, color='skyblue')
             plt.xlabel('Growth Time')
             plt.ylabel('Berries Qty')
