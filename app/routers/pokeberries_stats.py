@@ -84,26 +84,29 @@ class BerryStatisticsCalculator:
             dict: The statistics for the berries in a human-readable way.
         
         '''
-        
-        if not berries:
-            return {}
+        try: 
+            if not berries:
+                return {}
 
-        growth_times = []
-        names = []
-        
-        # Fetch the growth time and name of each berry concurrently for better performance.
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-            future_to_berry = {executor.submit(self._fetch_berry_data, berry): berry for berry in berries}
-            for future in concurrent.futures.as_completed(future_to_berry):
-                growth_time, name = future.result()
-                if growth_time is not None and name is not None:
-                    growth_times.append(growth_time)
-                    names.append(name)
+            growth_times = []
+            names = []
+            
+            # Fetch the growth time and name of each berry concurrently for better performance.
+            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+                future_to_berry = {executor.submit(self._fetch_berry_data, berry): berry for berry in berries}
+                for future in concurrent.futures.as_completed(future_to_berry):
+                    growth_time, name = future.result()
+                    if growth_time is not None and name is not None:
+                        growth_times.append(growth_time)
+                        names.append(name)
 
-        if not growth_times:
+            if not growth_times:
+                return {}
+            else:
+                return self._calculate_stats(growth_times, names)
+        except Exception as e:
+            print(f"Error calculating berry statistics: {e}")
             return {}
-        else:
-            return self._calculate_stats(growth_times, names)
 
     def _calculate_stats(self, growth_times: list, names: list) -> dict:    
         '''
@@ -118,34 +121,42 @@ class BerryStatisticsCalculator:
         
         '''
         def _add_berries_suffix(growth_times: list) -> dict:
-            '''
-            Adds the 'berry' or 'berries' suffix to the growth times.
-            
-            Args:
-                growth_times (list): The list of growth times.
+                '''
+                Adds the 'berry' or 'berries' suffix to the growth times.
                 
-            Returns:
-                dict: The growth times with the 'berry' or 'berries' suffix.
-            '''
-            frequency_growth_time = {time: growth_times.count(time) for time in set(growth_times)}
-            frequency_growth_time = {f"{time} days": frequency for time, frequency in frequency_growth_time.items()}
-            frequency_growth_time_with_berries = {key: f"{value} {'berry' if value == 1 else 'berries'}" for key, value in frequency_growth_time.items()}
-            
-            return frequency_growth_time_with_berries
+                Args:
+                    growth_times (list): The list of growth times.
+                    
+                Returns:
+                    dict: The growth times with the 'berry' or 'berries' suffix.
+                '''
+                try: 
+                    frequency_growth_time = {time: growth_times.count(time) for time in set(growth_times)}
+                    frequency_growth_time = {f"{time} days": frequency for time, frequency in frequency_growth_time.items()}
+                    frequency_growth_time_with_berries = {key: f"{value} {'berry' if value == 1 else 'berries'}" for key, value in frequency_growth_time.items()}
+                    
+                    return frequency_growth_time_with_berries
+                except Exception as e:
+                    print(f"Error adding suffix: {e}")
+                    return {}
 
-        frequency_growth_time_hr = _add_berries_suffix(growth_times)
+        try: 
+            frequency_growth_time_hr = _add_berries_suffix(growth_times)
 
-        self.stats = {
-            "berries_names": sorted(names),
-            "min_growth_time": f"{min(growth_times)} days",
-            "median_growth_time": f"{round(statistics.median(growth_times))} days",
-            "max_growth_time": f"{max(growth_times)} days",
-            "variance_growth_time": round(statistics.variance(growth_times), 3),
-            "mean_growth_time": f"{round(statistics.mean(growth_times))} days",
-            "frequency_growth_time": frequency_growth_time_hr
-        }
+            self.stats = {
+                "berries_names": sorted(names),
+                "min_growth_time": f"{min(growth_times)} days",
+                "median_growth_time": f"{round(statistics.median(growth_times))} days",
+                "max_growth_time": f"{max(growth_times)} days",
+                "variance_growth_time": round(statistics.variance(growth_times), 3),
+                "mean_growth_time": f"{round(statistics.mean(growth_times))} days",
+                "frequency_growth_time": frequency_growth_time_hr
+            }
 
-        return self.stats
+            return self.stats  
+        except Exception as e:
+            print(f"Error calculating berry statistics: {e}")
+            return {}
     
 router = APIRouter(prefix="/api/v1", tags=["Get all berry stats"], responses={404: {"description": "Not found"}})
 
