@@ -8,7 +8,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
-@app.get("/", status_code=status.HTTP_200_OK)
+@app.get("/", status_code=status.HTTP_200_OK, tags=["Root"])
 def root():
     return {"Welcome to Pokeberries statistics API!"}
 
