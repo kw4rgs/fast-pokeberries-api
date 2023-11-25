@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status, HTTPException
+from fastapi import FastAPI
 import uvicorn
 from app.routers import pokeberries_stats, pokeberries_html
 
@@ -6,11 +6,9 @@ app = FastAPI(
     title="Pokeberries statistics API",
     description="This is a simple API that returns statistics about the Pokeberries API",
     version="1.0.0",
+    docs_url="/api/v1/docs",
+    redoc_url="/api/v1/redoc",
 )
-
-@app.get("/", status_code=status.HTTP_200_OK, tags=["Root"])
-def root():
-    return {"Welcome to Pokeberries statistics API!"}
 
 app.include_router(pokeberries_stats.router)
 app.include_router(pokeberries_html.router)
