@@ -117,8 +117,23 @@ class BerryStatisticsCalculator:
             dict: The statistics for the berries in a human-readable way.
         
         '''
-        frequency_growth_time = {time: growth_times.count(time) for time in set(growth_times)}
-        frequency_growth_time = {f"{time} days": frequency for time, frequency in frequency_growth_time.items()}
+        def _add_berries_suffix(growth_times: list) -> dict:
+            '''
+            Adds the 'berry' or 'berries' suffix to the growth times.
+            
+            Args:
+                growth_times (list): The list of growth times.
+                
+            Returns:
+                dict: The growth times with the 'berry' or 'berries' suffix.
+            '''
+            frequency_growth_time = {time: growth_times.count(time) for time in set(growth_times)}
+            frequency_growth_time = {f"{time} days": frequency for time, frequency in frequency_growth_time.items()}
+            frequency_growth_time_with_berries = {key: f"{value} {'berry' if value == 1 else 'berries'}" for key, value in frequency_growth_time.items()}
+            
+            return frequency_growth_time_with_berries
+
+        frequency_growth_time_hr = _add_berries_suffix(growth_times)
 
         self.stats = {
             "berries_names": sorted(names),
@@ -127,7 +142,7 @@ class BerryStatisticsCalculator:
             "max_growth_time": f"{max(growth_times)} days",
             "variance_growth_time": round(statistics.variance(growth_times), 3),
             "mean_growth_time": f"{round(statistics.mean(growth_times))} days",
-            "frequency_growth_time": frequency_growth_time
+            "frequency_growth_time": frequency_growth_time_hr
         }
 
         return self.stats
