@@ -60,7 +60,7 @@ class Plotter:
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(responses={404: {"description": "Not found"}})
 
-@router.get("/berry-histogram", response_class=HTMLResponse, status_code=status.HTTP_200_OK, tags=["Berry Histogram"])
+@router.get("/", response_class=HTMLResponse, status_code=status.HTTP_200_OK, tags=["Berry Histogram"])
 async def berry_histogram(request: Request) -> HTMLResponse:
     data_retriever = DataRetriever()
     plotter = Plotter()

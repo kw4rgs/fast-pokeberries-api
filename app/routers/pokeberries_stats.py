@@ -4,7 +4,8 @@ from fastapi.responses import JSONResponse
 import os
 from dotenv import load_dotenv
 import statistics 
-import concurrent.futures
+import aiohttp
+import asyncio
 
 load_dotenv()
 
@@ -51,51 +52,50 @@ class BerryStatisticsCalculator:
     def __init__(self):
         self.stats = {}
 
-    def _fetch_berry_data(self, berry: dict) -> tuple:
+    async def _fetch_berry_data(self, session, berry):
         '''
-        Fetches the growth time and name of a berry.
+        Fetches the berry data from the API endpoint.
         
         Args:
+            session (aiohttp.ClientSession): The aiohttp client session.
             berry (dict): The berry data.
             
         Returns:
-            tuple: A tuple containing the growth time and name of the berry.
+            tuple: The growth time and name of the berry.
         '''
         try:
-            if 'url' in berry:
-                response = requests.get(berry['url'])
-                response.raise_for_status()
-                growth_time = response.json().get('growth_time')
-                name = berry['name']
-                if growth_time is not None:
+            async with session.get(berry['url']) as response:
+                if response.status == 200:
+                    data = await response.json()
+                    growth_time = data.get('growth_time')
+                    name = berry['name']
                     return growth_time, name
-        except requests.RequestException as e:
+        except aiohttp.ClientError as e:
             print(f"Error fetching data for {berry['name']}: {e}")
         return None, None
 
-    def get_stats(self, berries: list) -> dict:
+    async def get_stats(self, berries: list) -> dict:
         '''
-        Calculates the statistics for the berries.
+        Gets the statistics for the berries.
         
         Args:
             berries (list): The list of berries.
-        
+            
         Returns:
             dict: The statistics for the berries in a human-readable way.
-        
         '''
         try: 
-            if not berries:
-                return {}
-
             growth_times = []
             names = []
             
-            # Fetch the growth time and name of each berry concurrently for better performance.
-            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-                future_to_berry = {executor.submit(self._fetch_berry_data, berry): berry for berry in berries}
-                for future in concurrent.futures.as_completed(future_to_berry):
-                    growth_time, name = future.result()
+            # Use asyncio to fetch the berry data concurrently to make non blocking I/O http requests
+            async with aiohttp.ClientSession() as session:
+                tasks = []
+                for berry in berries:
+                    tasks.append(self._fetch_berry_data(session, berry))  
+
+                results = await asyncio.gather(*tasks)
+                for growth_time, name in results:
                     if growth_time is not None and name is not None:
                         growth_times.append(growth_time)
                         names.append(name)
@@ -105,7 +105,7 @@ class BerryStatisticsCalculator:
             else:
                 return self._calculate_stats(growth_times, names)
         except Exception as e:
-            print(f"Error calculating berry statistics: {e}")
+            print(f"Error getting berry statistics: {e}")
             return {}
 
     def _calculate_stats(self, growth_times: list, names: list) -> dict:    
@@ -169,9 +169,9 @@ async def get_all_berry_stats() -> JSONResponse:
 
         fetcher = BerryFetcher(api_url)
         stats_calculator = BerryStatisticsCalculator()
-        
+
         berries = fetcher.fetch()
-        stats = stats_calculator.get_stats(berries)
+        stats = await stats_calculator.get_stats(berries)
 
         response_content = {'error': False, 'data': stats}
         return JSONResponse(content=response_content, status_code=status.HTTP_200_OK)
