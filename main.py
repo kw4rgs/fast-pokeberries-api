@@ -1,13 +1,18 @@
 from fastapi import FastAPI
 import uvicorn
 from app.routers import pokeberries_stats, pokeberries_html
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+enviroment = os.getenv("ENVIRONMENT")
 
 app = FastAPI(
     title="Pokeberries statistics API",
-    description="This is a simple API that returns statistics about the Pokeberries API",
+    description=f"This is a simple API that returns statistics about the Pokeberries API. This is the {enviroment} enviroment.",
     version="1.0.0",
-    docs_url="/api/v1/docs",
-    redoc_url="/api/v1/redoc",
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
 
 app.include_router(pokeberries_stats.router)

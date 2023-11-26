@@ -1,2 +1,4 @@
 # Replace the url with the real api url
-POKEBERRIES_API_URL=http://example.com/api
+# Replace the environment with the real environment
+ENVIRONMENT="some_environment"
+POKEBERRIES_API_URL="some_url"
