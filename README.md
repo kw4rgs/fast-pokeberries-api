@@ -71,7 +71,7 @@ This is the webview of the statistics. Just type in you browser the url provided
 ## Instructions 🚀
 
 1) Cloning the repository to local
-2) Cloning the reposirtory to a web server
+2) Cloning the repository to a web server
 3) Using the dockerized version
 
 ### 1) Cloning the repository to local
@@ -147,7 +147,7 @@ To deploy and install your project, you can follow these instructions:
 Tip: To deactivate the virtual environment, simply type `deactivate` in the terminal.
 
 
-### 2) Cloning the reposirtory to a web server
+### 2) Cloning the repository to a web server
 
 To deploy as a web service, follow these additional steps:
 
@@ -190,6 +190,28 @@ To deploy as a web service, follow these additional steps:
 Now, your application has been deployed and should run as a systemd service. It will automatically start on boot and restart if it crashes.
 
 ### 3) Using the dockerized version
+
+Important note: you must have docker installed in your computer (https://docs.docker.com/engine/install/ubuntu/)
+
+Once you have cloned the repository. Follow these steps:
+
+1. Copy env-example to .env.prod  (or to .env.dev for hot-reload)
+    ```
+    cp env-example .env.prod
+    ```
+    
+2. Edit the .env.prod with the current API URL (to this date 11/23 this is the url)
+    ```
+    nano .env.prod
+
+    ENVIRONMENT="Production"
+    POKEBERRIES_API_URL="https://pokeapi.co/api/v2/berry/"
+    ```
+3. Run the following command to start the APP
+    ```
+   docker-compose -f docker-compose.prod.yaml up
+    ```
+
 
 ## Authors
 
