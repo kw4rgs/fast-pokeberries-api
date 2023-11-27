@@ -3,6 +3,9 @@
 </div>
 
 # FAST-POKEBERRIES-API
+![Python](http://ForTheBadge.com/images/badges/made-with-python.svg)
+![Love](http://ForTheBadge.com/images/badges/built-with-love.svg)
+
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 ![Gunicorn](https://img.shields.io/badge/gunicorn-%298729.svg?style=for-the-badge&logo=gunicorn&logoColor=white)
@@ -11,11 +14,14 @@
 ![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 
+
+
 ## Features 💪
 
 -   **FastAPI App:** Utilizes FastAPI, a high-performance web framework for building APIs in Python, ensuring fast development and efficient handling of requests.
 -   **Production-Ready:** Configured and optimized for production environments, incorporating best practices for stability and performance.
 -   **Dockerized:** Offers a containerized version using Docker, ensuring consistent deployment across different environments and simplifying setup.
+-   **Test Cases:** Implemented testcases (Pytest) to ensure the reliability, functionality, and integrity of the codebase
 -   **Easy Deployment:** Streamlines deployment using Docker Compose or Dockerfiles, making it hassle-free for various environments.
 -   **Documentation:** Automatically generates API documentation for clear and accessible endpoints, simplifying usage for developers and users.
 
@@ -67,6 +73,15 @@ This is the webview of the statistics. Just type in you browser the url provided
     <img src="https://github.com/kw4rgs/fast-pokeberries-api/blob/143071d5e0dfe954b6cde2a5985071d0ca615fa0/static/pokeberries-dashboard.png" alt="swagger-capture">
 </div>
 
+## Tests 🧪
+Added Pytest for comprehensive testing of the APP within the test/ directory. This validates API responses and data validation.
+You can use it with the following command:
+
+From the root directory:
+
+   ```
+   pytest tests/test_get_all_berry_stats.py 
+   ```
 
 ## Instructions 🚀
 
