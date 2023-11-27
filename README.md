@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="https://github.com/kw4rgs/fast-pokeberries-api/blob/816baf520755cc122e2305eb84e029c5e240918c/cover.png" alt="logo">
+    <img src="https://github.com/kw4rgs/fast-pokeberries-api/blob/143071d5e0dfe954b6cde2a5985071d0ca615fa0/static/cover.png" alt="logo">
 </div>
 
 # FAST-POKEBERRIES-API
@@ -48,20 +48,24 @@ or
 
 **Endpoints**
 
-1) Dashboard:
-
-This is web view dashboard for the App. 
-
->    - Endpoint: /
->    - HTTP Method: GET
-
-
-2) Pokeberries statistics:
+### 1) Pokeberries statistics:
 
 This endpoint retrieves the pokeberries statictics from the external API.
 
 >    - Endpoint: /api/v1/allBerryStats
 >    - HTTP Method: GET
+
+<div align="center">
+    <img src="https://github.com/kw4rgs/fast-pokeberries-api/blob/143071d5e0dfe954b6cde2a5985071d0ca615fa0/static/%20swagger-capture.png" alt="swagger-capture">
+</div>
+
+### 2) Webview
+
+This is the webview of the statistics. Just type in you browser the url provided.
+
+<div align="center">
+    <img src="https://github.com/kw4rgs/fast-pokeberries-api/blob/143071d5e0dfe954b6cde2a5985071d0ca615fa0/static/pokeberries-dashboard.png" alt="swagger-capture">
+</div>
 
 
 ## Instructions 🚀
