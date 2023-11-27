@@ -194,3 +194,9 @@ Now, your application has been deployed and should run as a systemd service. It 
 ## Authors
 
 - [@kw4rgs](https://www.github.com/kw4rgs)
+
+## Resources
+
+**All the data is being requested to the following endpoint : https://pokeapi.co/api/v2/berry/**
+
+**You can read the documentation in: https://pokeapi.co/docs/v2#berries**
