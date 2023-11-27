@@ -13,9 +13,26 @@
 
 ## Features 💪
 
+-   **FastAPI App:** Utilizes FastAPI, a high-performance web framework for building APIs in Python, ensuring fast development and efficient handling of requests.
+-   **Production-Ready:** Configured and optimized for production environments, incorporating best practices for stability and performance.
+-   **Dockerized:** Offers a containerized version using Docker, ensuring consistent deployment across different environments and simplifying setup.
+-   **Easy Deployment:** Streamlines deployment using Docker Compose or Dockerfiles, making it hassle-free for various environments.
+-   **Documentation:** Automatically generates API documentation for clear and accessible endpoints, simplifying usage for developers and users.
 
 ## Information 📢
 
+The API provide this information:
+
+ - **"berries_names":** An alphabetically sorted list of all the unique
+   names of the berries.
+ - **"min_growth_time":** Represents the shortest growth time among all the
+   berries.
+ - **"median_growth_time":** The middle value of the growth times representing the median growth time of the
+   berries.
+ - **"max_growth_time":** Indicates the longest growth time among the berries.
+ - **"variance_growth_time":** Represents the variance in the growth times across all berries, showing how much they differ from the mean.
+ - **"mean_growth_time":** The average growth time calculated across all the berries.
+ - **"frequency_growth_time":** Provides a breakdown of the frequency of different growth times among the berries.
 
 ## Documentation 📚
 
@@ -23,17 +40,17 @@
 
 All the necessary documentation will be available through the URL: 
 
-> server ip:port/api/v1/docs
+> server ip:port/docs
 
 or 
 
-> server ip:port/api/v1/redoc
+> server ip:port/redoc
 
 **Endpoints**
 
 1) Dashboard:
 
-This is web view dashboard for the App.
+This is web view dashboard for the App. 
 
 >    - Endpoint: /
 >    - HTTP Method: GET
@@ -48,6 +65,12 @@ This endpoint retrieves the pokeberries statictics from the external API.
 
 
 ## Instructions 🚀
+
+1) Cloning the repository to local
+2) Cloning the reposirtory to a web server
+3) Using the dockerized version
+
+### 1) Cloning the repository to local
 
 > I will use "ubuntu" for practical purposes..
 
@@ -80,7 +103,7 @@ To deploy and install your project, you can follow these instructions:
 
 6. Change to the project directory:
    ```
-   cd /opt/fast-pokeberries-api
+   cd fast-pokeberries-api
    ```
 
 7. Create a Python virtual environment:
@@ -103,11 +126,12 @@ To deploy and install your project, you can follow these instructions:
     cp env-example .env
     ```
     
-11. Edit the .env with the current API URL (to this date 11/23 this is the url)
+11. Edit the .env.prod with the current API URL (to this date 11/23 this is the url)
     ```
     nano .env
 
-    POKEBERRIES_API_URL=https://pokeapi.co/api/v2/berry/
+    ENVIRONMENT="Production"
+    POKEBERRIES_API_URL="https://pokeapi.co/api/v2/berry/"
 
     ```
 
@@ -119,6 +143,49 @@ To deploy and install your project, you can follow these instructions:
 Tip: To deactivate the virtual environment, simply type `deactivate` in the terminal.
 
 
+### 2) Cloning the reposirtory to a web server
+
+To deploy as a web service, follow these additional steps:
+
+1. Open the systemd service configuration file in a text editor:
+   ```
+   sudo nano /etc/systemd/system/fast-pokeberries-api.service
+   ```
+
+2. Paste the following content into the file:
+   ```
+   [Unit]
+   Description=Pokeberries FastAPI Application
+   After=network.target
+
+   [Service]
+   User=<your_username>
+   Group=<your_groupname>
+   WorkingDirectory=/opt/fast-pokeberries-api #Or the directory where you put the app
+   ExecStart=/opt/fast-pokeberries-api/env/bin/uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4 #same in here
+   Restart=always
+
+   [Install]
+   WantedBy=multi-user.target
+   ```
+
+   Replace `<your_username>` and `<your_groupname>` with your actual username and group name.
+
+3. Save the file and exit the text editor.
+
+4. Enable the service to start on boot:
+   ```
+   sudo systemctl enable fast-pokeberries-api.service
+   ```
+
+5. Start the service:
+   ```
+   sudo systemctl start fast-pokeberries-api.service
+   ```
+
+Now, your application has been deployed and should run as a systemd service. It will automatically start on boot and restart if it crashes.
+
+### 3) Using the dockerized version
 
 ## Authors
 
